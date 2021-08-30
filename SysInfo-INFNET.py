@@ -1,9 +1,4 @@
-#Código baseado com internet cabeada (Ethernet) e processador com 12 threads. É necessária adaptação dessas variáveis para funcionamento em outras máquinas e sistemas..
-
-#ToDo:
-#Tornar acessível o Run independente:
-#  Dos dados de Rede (Wi-Fi ou Ethernet)
-#  Do número de Threads de cada CPU
+#Código baseado com internet cabeada (Ethernet) e processador com 12 threads. É necessária adaptação dessas variáveis para funcionamento em outras máquinas e sistemas.
 
 import PySimpleGUI as pysg
 import psutil, platform, cpuinfo

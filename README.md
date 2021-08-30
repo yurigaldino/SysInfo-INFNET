@@ -7,3 +7,8 @@ Projeto para satisfazer demandas do bloco DE Arquitetura de Computadores, Sistem
 | Disciplina | PB |
 | Professor | LP |
 | Versão | TP3 - PB |
+
+### ToDo:
+#### Tornar acessível o Run independente:
+####  Dos dados de Rede (Wi-Fi ou Ethernet)
+####  Do número de Threads de cada CPU
