@@ -12,3 +12,5 @@ Projeto para satisfazer demandas do bloco DE Arquitetura de Computadores, Sistem
 #### Tornar acessível o Run independente:
 ####  Dos dados de Rede (Wi-Fi ou Ethernet)
 ####  Do número de Threads de cada CPU
+
+https://prnt.sc/1qudk6l
