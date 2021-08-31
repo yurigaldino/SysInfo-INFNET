@@ -13,4 +13,7 @@ Projeto para satisfazer demandas do bloco DE Arquitetura de Computadores, Sistem
 ####  Dos dados de Rede (Wi-Fi ou Ethernet)
 ####  Do número de Threads de cada CPU
 
-https://prnt.sc/1qudk6l
+<p align="center">
+  <img src="https://prnt.sc/1qudk6l" />
+</p>
+
