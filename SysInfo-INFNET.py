@@ -1,7 +1,9 @@
 #Código baseado com internet cabeada (Ethernet) e processador com 12 threads. É necessária adaptação dessas variáveis para funcionamento em outras máquinas e sistemas.
 
 import PySimpleGUI as pysg
-import psutil, platform, cpuinfo
+import psutil, platform, cpuinfo, os, time
+from tabulate import tabulate
+from hurry.filesize import size, alternative
 
 #Setando tema e cor de fonte do sistema
 pysg.theme('LightBrown13') #Banco de temas pode ser encontrado aqui: https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg
@@ -128,6 +130,80 @@ layout_rede = [
     [pysg.Text(f'{physical_address}', text_color=font_color)]
 ]
 
+#Carrega dados no layout_diretorios com o dirFinder()
+layout_diretorios = [
+    [pysg.Text('Mapeamento de diretórios na raiz do Python:')]
+]
+
+def dirFinder():
+    lista = os.listdir()
+    dic = {}
+    for i in lista:
+        if os.path.isfile(i):
+            dic[i] = []
+            dic[i].append(size(os.stat(i).st_size,system=alternative))
+            dic[i].append(os.stat(i).st_atime)
+            dic[i].append(os.stat(i).st_mtime)
+        else:
+            dirName = "(DIR) " + i
+            dic[dirName] = []
+            dic[dirName].append(size(os.stat(i).st_size,system=alternative))
+            dic[dirName].append(os.stat(i).st_atime)
+            dic[dirName].append(os.stat(i).st_mtime)
+
+    tabela = [["Nome", "Tamanho", "Data criação", "Data modificação"]]
+    for arq in dic:
+        linha = [arq]
+        linha.append(dic[arq][0])
+        linha.append(time.ctime(dic[arq][1]))
+        linha.append(time.ctime(dic[arq][2]))
+        tabela.append(linha)
+        linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")
+    layout_diretorios.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
+dirFinder()
+
+layout_processos = [
+    [pysg.Text("PID    #    Threads   #   Criação    #    T. Usu    #    T. Sis    #    Mem. (%)    #    RSS    #    VMS    #    Executável:")]
+]
+
+def mostra_info(pid):
+    try:
+        p = psutil.Process(pid)
+        texto = []
+        texto.append(pid)
+        texto.append(p.num_threads())
+        texto.append(time.ctime(p.create_time()))
+        texto.append(round(p.cpu_times().user, 2))
+        texto.append(round(p.cpu_times().system, 2))
+        texto.append(round(p.memory_percent(), 2))
+        rss = round((p.memory_info().rss / (2 ** 20)), 2)
+        texto.append(rss)
+        vms = round((p.memory_info().vms / (2 ** 20)), 2)
+        texto.append(vms)
+        exe = p.exe()
+        exe = exe.split("\\")
+        exe = exe[-1]
+        texto.append(exe)
+        #print(texto)
+        return texto
+    except:
+        pass
+
+def pidFinder():
+    tabela = []
+    lista_pids = psutil.pids()
+    cont = 0
+    for pid in lista_pids:
+        texto = mostra_info(pid)
+        if (texto != None):
+            tabela.append(texto)
+            if (cont == 20):
+                break
+        cont += 1
+    linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")    
+    layout_processos.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
+pidFinder()
+
 #Definição de layout com Tabs
 abas = [
     [pysg.TabGroup([
@@ -137,9 +213,12 @@ abas = [
             pysg.Tab('Threds', layout_threads),
             pysg.Tab('Memória', layout_memoria),
             pysg.Tab('Disco', layout_disco),
-            pysg.Tab('Rede', layout_rede)]], tab_location='topleft', selected_background_color='Gray', border_width=5)
+            pysg.Tab('Rede', layout_rede),
+            pysg.Tab('Diretórios', layout_diretorios),
+            pysg.Tab('Processos', layout_processos)
+            ]], tab_location='left', selected_background_color='Gray', border_width=5)
         ],
-        [pysg.Text('', size=(14,0)), pysg.Button('Home'), pysg.Button('Fechar')]
+        [pysg.Text('', size=(36,0)), pysg.Button('Home'), pysg.Button('Fechar')]
 ]
 
 #Definição de Window
