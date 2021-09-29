@@ -1,7 +1,8 @@
 #Código baseado com internet cabeada (Ethernet) e processador com 12 threads. É necessária adaptação dessas variáveis para funcionamento em outras máquinas e sistemas.
 
 import PySimpleGUI as pysg
-import psutil, platform, cpuinfo, os, time
+from PySimpleGUI.PySimpleGUI import Print
+import psutil, platform, cpuinfo, os, time, sched
 from tabulate import tabulate
 from hurry.filesize import size, alternative
 
@@ -135,7 +136,7 @@ layout_diretorios = [
     [pysg.Text('Mapeamento de diretórios na raiz do Python:')]
 ]
 
-def dirFinder():
+def dirFinder(nome):
     lista = os.listdir()
     dic = {}
     for i in lista:
@@ -160,7 +161,8 @@ def dirFinder():
         tabela.append(linha)
         linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")
     layout_diretorios.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
-dirFinder()
+    print("     (CHAMADA) ", time.ctime(), nome)
+# dirFinder()
 
 layout_processos = [
     [pysg.Text("PID    #    Threads   #   Criação    #    T. Usu    #    T. Sis    #    Mem. (%)    #    RSS    #    VMS    #    Executável:")]
@@ -189,7 +191,7 @@ def mostra_info(pid):
     except:
         pass
 
-def pidFinder():
+def pidFinder(nome):
     tabela = []
     lista_pids = psutil.pids()
     cont = 0
@@ -202,7 +204,27 @@ def pidFinder():
         cont += 1
     linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")    
     layout_processos.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
-pidFinder()
+    print("     (CHAMADA) ", time.ctime(), nome)
+# pidFinder()
+
+
+#Escalonamento de chamadas com sched
+scheduler = sched.scheduler(time.time, time.sleep)
+
+def print_event(nome):
+    print("EVENTO:", time.ctime(), nome)
+
+scheduler.enter(3, 1, dirFinder, ("- INFO: Função de  diretórios",))
+scheduler.enter(6, 1, pidFinder, ("- INFO: Função de  PID's\n",))
+print("\nINÍCIO DE ESCALONAMENTO DE CHAMADAS:", time.ctime(),"\n")
+
+t0 = time.perf_counter()
+freq_cpu1 = str(round(psutil.cpu_freq().current, 2))
+scheduler.run()
+sec = round(time.perf_counter() - t0)
+print("Tempo de processo do Scheduler antes de iniciar a aplicação = "+str(sec)+" segundos.") 
+print("Ciclos do procesador (Frequència ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n")
+
 
 #Definição de layout com Tabs
 abas = [
