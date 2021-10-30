@@ -1,10 +1,13 @@
-#Código baseado com internet cabeada (Ethernet) e processador com 12 threads. É necessária adaptação dessas variáveis para funcionamento em outras máquinas e sistemas.
+#Código baseado com internet cabeada (Ethernet), processador com 12 threads e IP 192.168.0.42 
+#É necessária adaptação dessas variáveis para funcionamento correto em outras máquinas e sistemas.
 
 import PySimpleGUI as pysg
 from PySimpleGUI.PySimpleGUI import Print
 import psutil, platform, cpuinfo, os, time, sched
 from tabulate import tabulate
 from hurry.filesize import size, alternative
+# Chama módulo de máquinas pertencentes à sub-rede de IP específico e portas dos diferentes IPs obtidos nessa sub rede
+from tp6 import *
 
 #Setando tema e cor de fonte do sistema
 pysg.theme('LightBrown13') #Banco de temas pode ser encontrado aqui: https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg
@@ -223,10 +226,11 @@ freq_cpu1 = str(round(psutil.cpu_freq().current, 2))
 scheduler.run()
 sec = round(time.perf_counter() - t0)
 print("Tempo de processo do Scheduler antes de iniciar a aplicação = "+str(sec)+" segundos.") 
-print("Ciclos do procesador (Frequència ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n")
+print("Ciclos do processador (Frequència ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n")
+print("* * * * * INFO: Aplicação inicializada. * * * * *\n")
 
 
-#Definição de layout com Tabs
+
 abas = [
     [pysg.TabGroup([
         [
@@ -295,3 +299,7 @@ while True:
     window['-PROGDISC-'].update(percent_disco)
 
 window.close()
+
+# Crie uma ou mais funções que retornem ou apresentem as seguintes informações de redes: IP, gateway, máscara de subrede.
+# Crie uma ou mais funções que retornem ou apresentem as seguintes informações de redes: Uso de dados de rede por interface.
+# Crie uma ou mais funções que retornem ou apresentem as seguintes informações de redes: Uso de dados de rede por processos.
