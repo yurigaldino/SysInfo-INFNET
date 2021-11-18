@@ -1,4 +1,4 @@
-import os, subprocess, platform, nmap
+import os, subprocess, platform, nmap, socket
 
 def retorna_codigo_ping(host):
     plataforma = platform.system()
@@ -43,8 +43,15 @@ def scan_host(host):
             print("     Porta", port, "Estado", nm[host][proto][port]["state"])
         print("\n------------------------------------------------------------")
 
-ip_string = "192.168.0.42"
-ip_lista = ip_string.split(".") 
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    My_ip=s.getsockname()[0]
+    s.close()
+    print("Meu IP: ",My_ip)
+    return My_ip
+
+ip_lista = get_ip_address().split(".") 
 base_ip = ".".join(ip_lista[0:3]) + "." 
 print("------------------------------------------------------------")
 print("\nTESTE DE IPs DA SUBREDE:", base_ip + "0")
