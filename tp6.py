@@ -22,27 +22,6 @@ def verifica_hosts(base_ip):
     print()
     return host_validos
 
-def obter_hostnames(host_validos):
-    nm = nmap.PortScanner()
-    try:
-        nm.scan(host)
-        print("     IP", host, "possui o nome", nm[host].hostname())
-    except:
-        #pass
-        print("Erro:", host)
-
-def scan_host(host):
-    nm = nmap.PortScanner()
-    nm.scan(host)
-    print(nm[host].hostname())
-    for proto in nm[host].all_protocols():
-        print("------------------------------")
-        print("Protocolo:", proto.upper(),"\n")
-        lport = nm[host][proto].keys()
-        for port in lport:
-            print("     Porta", port, "Estado", nm[host][proto][port]["state"])
-        print("\n------------------------------------------------------------")
-
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
@@ -51,13 +30,36 @@ def get_ip_address():
     print("Meu IP: ",My_ip)
     return My_ip
 
-ip_lista = get_ip_address().split(".") 
-base_ip = ".".join(ip_lista[0:3]) + "." 
-print("------------------------------------------------------------")
-print("\nTESTE DE IPs DA SUBREDE:", base_ip + "0")
-host_validos = verifica_hosts(base_ip)
-print("     HOST VÁLIDOS:", host_validos)
+def tp6Data():
+    data = []
+    ip_lista = get_ip_address().split(".") 
+    base_ip = ".".join(ip_lista[0:3]) + "." 
+    data.append("------------------------------------------------------------")
+    data.append("\nTESTE DE IPs DA SUBREDE: " + str(base_ip) + "0\n")
+    host_validos = verifica_hosts(base_ip)
+    data.append("     HOST VÁLIDOS: " + str(host_validos))
 
-for host in host_validos:
-    obter_hostnames(host)
-    scan_host(host)
+    for host in host_validos:
+
+        #obter_hostnames(host)
+        nm = nmap.PortScanner()
+        try:
+            nm.scan(host)
+            data.append("     IP " + str(host) + " possui o nome " + str(nm[host].hostname()))
+        except:
+            #pass
+            print("Erro:", host)
+
+        
+        #scan_host(host)
+        nm = nmap.PortScanner()
+        nm.scan(host)
+        data.append(nm[host].hostname())
+        for proto in nm[host].all_protocols():
+            data.append("------------------------------")
+            data.append("Protocolo:" + str(proto.upper()) + "\n")
+            lport = nm[host][proto].keys()
+            for port in lport:
+                data.append("     Porta " + str(port) + " Estado " + str(nm[host][proto][port]["state"]))
+            data.append("\n------------------------------------------------------------")
+    return data

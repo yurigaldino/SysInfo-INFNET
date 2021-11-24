@@ -3,14 +3,17 @@
 
 import PySimpleGUI as pysg
 from PySimpleGUI.PySimpleGUI import Print
-import psutil, platform, cpuinfo, os, time, sched, netifaces, socket 
+import psutil, platform, cpuinfo, os, time, sched, netifaces, socket , pickle
 from tabulate import tabulate
 from hurry.filesize import size, alternative
 # Chama módulos: 
 #   De máquinas pertencentes à sub-rede de IP específico e portas dos diferentes IPs obtidos nessa sub rede.
 #   De IPs, Gateways e máscaras de rede.
-from tp6 import *
-from tp7 import *
+# from tp6 import *
+# from tp7 import *
+# from tp5 import *
+
+from Cliente import *
 
 #Setando tema e cor de fonte do sistema
 pysg.theme('LightBrown13') #Banco de temas pode ser encontrado aqui: https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg
@@ -213,24 +216,6 @@ def pidFinder(nome):
     print("     (CHAMADA) ", time.ctime(), nome)
 # pidFinder()
 
-
-#Escalonamento de chamadas com sched
-scheduler = sched.scheduler(time.time, time.sleep)
-
-def print_event(nome):
-    print("EVENTO:", time.ctime(), nome)
-
-scheduler.enter(3, 1, dirFinder, ("- INFO: Função de  diretórios",))
-scheduler.enter(6, 1, pidFinder, ("- INFO: Função de  PID's\n",))
-print("------------------------------")
-print("INÍCIO DE ESCALONAMENTO DE CHAMADAS:", time.ctime(),"\n")
-
-t0 = time.perf_counter()
-freq_cpu1 = str(round(psutil.cpu_freq().current, 2))
-scheduler.run()
-sec = round(time.perf_counter() - t0)
-print("Tempo de processo do Scheduler antes de iniciar a aplicação = "+str(sec)+" segundos.") 
-print("Ciclos do processador (Frequência ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n")
 print("* * * * * INFO: Aplicação inicializada. * * * * *\n")
 
 abas = [
