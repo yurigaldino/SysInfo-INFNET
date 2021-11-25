@@ -11,9 +11,10 @@ from hurry.filesize import size, alternative
 #   De IPs, Gateways e máscaras de rede.
 # from tp6 import *
 # from tp7 import *
-# from tp5 import *
 
-from Cliente import *
+from tp5 import dataDirLayout, dataCallsSched, dataPidLayout
+
+from Cliente import ClientData
 
 #Setando tema e cor de fonte do sistema
 pysg.theme('LightBrown13') #Banco de temas pode ser encontrado aqui: https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg
@@ -131,7 +132,7 @@ layout_disco = [
     [pysg.ProgressBar(100, orientation='h', size=(30,20), key='-PROGDISC-')]
 ]
 
-layout_rede = [
+layout_rede1 = [
     [pysg.Text('IPv4:')],
     [pysg.Text(f'{ip}', text_color=font_color)],
     [pysg.Text('IPv6:')],
@@ -140,99 +141,21 @@ layout_rede = [
     [pysg.Text(f'{physical_address}', text_color=font_color)]
 ]
 
-#Carrega dados no layout_diretorios com o dirFinder()
-layout_diretorios = [
-    [pysg.Text('Mapeamento de diretórios na raiz do Python:')]
-]
 
-def dirFinder(nome):
-    lista = os.listdir()
-    dic = {}
-    for i in lista:
-        if os.path.isfile(i):
-            dic[i] = []
-            dic[i].append(size(os.stat(i).st_size,system=alternative))
-            dic[i].append(os.stat(i).st_atime)
-            dic[i].append(os.stat(i).st_mtime)
-        else:
-            dirName = "(DIR) " + i
-            dic[dirName] = []
-            dic[dirName].append(size(os.stat(i).st_size,system=alternative))
-            dic[dirName].append(os.stat(i).st_atime)
-            dic[dirName].append(os.stat(i).st_mtime)
+layout_rede2 = [] #Vem do servidor
 
-    tabela = [["Nome", "Tamanho", "Data criação", "Data modificação"]]
-    for arq in dic:
-        linha = [arq]
-        linha.append(dic[arq][0])
-        linha.append(time.ctime(dic[arq][1]))
-        linha.append(time.ctime(dic[arq][2]))
-        tabela.append(linha)
-        linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")
-    layout_diretorios.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
-    print("     (CHAMADA) ", time.ctime(), nome)
-# dirFinder()
+layout_diretorios = dataDirLayout() #Vem do local
 
-layout_processos = [
-    [pysg.Text("PID    #    Threads   #   Criação    #    T. Usu    #    T. Sis    #    Mem. (%)    #    RSS    #    VMS    #    Executável:")]
-]
+layout_processos = dataPidLayout() #Vem do local
 
-def mostra_info(pid):
-    try:
-        p = psutil.Process(pid)
-        texto = []
-        texto.append(pid)
-        texto.append(p.num_threads())
-        texto.append(time.ctime(p.create_time()))
-        texto.append(round(p.cpu_times().user, 2))
-        texto.append(round(p.cpu_times().system, 2))
-        texto.append(round(p.memory_percent(), 2))
-        rss = round((p.memory_info().rss / (2 ** 20)), 2)
-        texto.append(rss)
-        vms = round((p.memory_info().vms / (2 ** 20)), 2)
-        texto.append(vms)
-        exe = p.exe()
-        exe = exe.split("\\")
-        exe = exe[-1]
-        texto.append(exe)
-        #print(texto)
-        return texto
-    except:
-        pass
+layout_sched = dataCallsSched() #Vem do local
 
-def pidFinder(nome):
-    tabela = []
-    lista_pids = psutil.pids()
-    cont = 0
-    for pid in lista_pids:
-        texto = mostra_info(pid)
-        if (texto != None):
-            tabela.append(texto)
-            if (cont == 20):
-                break
-        cont += 1
-    linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")    
-    layout_processos.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
-    print("     (CHAMADA) ", time.ctime(), nome)
-# pidFinder()
+def serverDataFinder():
+    tabela = ClientData()
+    for i in tabela:
+        layout_rede2.append([pysg.Text(i, text_color=font_color)])
+serverDataFinder()
 
-#Escalonamento de chamadas com sched
-scheduler = sched.scheduler(time.time, time.sleep)
-
-def print_event(nome):
-    print("EVENTO:", time.ctime(), nome)
-
-scheduler.enter(3, 1, dirFinder, ("- INFO: Função de  diretórios",))
-scheduler.enter(6, 1, pidFinder, ("- INFO: Função de  PID's\n",))
-print("------------------------------")
-print("INÍCIO DE ESCALONAMENTO DE CHAMADAS:", time.ctime(),"\n")
-
-t0 = time.perf_counter()
-freq_cpu1 = str(round(psutil.cpu_freq().current, 2))
-scheduler.run()
-sec = round(time.perf_counter() - t0)
-print("Tempo de processo do Scheduler antes de iniciar a aplicação = "+str(sec)+" segundos.") 
-print("Ciclos do processador (Frequência ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n")
 print("* * * * * INFO: Aplicação inicializada. * * * * *\n")
 
 abas = [
@@ -243,9 +166,11 @@ abas = [
             pysg.Tab('Threds', layout_threads),
             pysg.Tab('Memória', layout_memoria),
             pysg.Tab('Disco', layout_disco),
-            pysg.Tab('Rede', layout_rede),
+            pysg.Tab('Rede I', layout_rede1),
+            pysg.Tab('Rede II', layout_rede2),
             pysg.Tab('Diretórios', layout_diretorios),
-            pysg.Tab('Processos', layout_processos)
+            pysg.Tab('Processos', layout_processos),
+            pysg.Tab('Scheduler', layout_sched)
             ]], tab_location='left', selected_background_color='Gray', border_width=5)
         ],
         [pysg.Text('', size=(36,0)), pysg.Button('Home'), pysg.Button('Fechar')]
@@ -303,5 +228,3 @@ while True:
     window['-PROGDISC-'].update(percent_disco)
 
 window.close()
-
-# Crie uma ou mais funções que retornem ou apresentem as seguintes informações de redes: IP, gateway, máscara de subrede.

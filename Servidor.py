@@ -43,8 +43,6 @@ while True:
     for i in tp7Data():
         resposta.append(i)
 
-
-
     # Prepara a lista para o envio
     bytes_resp = pickle.dumps(resposta)
     # Envia os dados

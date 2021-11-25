@@ -34,7 +34,6 @@ def tp6Data():
     data = []
     ip_lista = get_ip_address().split(".") 
     base_ip = ".".join(ip_lista[0:3]) + "." 
-    data.append("------------------------------------------------------------")
     data.append("\nTESTE DE IPs DA SUBREDE: " + str(base_ip) + "0\n")
     host_validos = verifica_hosts(base_ip)
     data.append("     HOST VÁLIDOS: " + str(host_validos))
@@ -56,10 +55,25 @@ def tp6Data():
         nm.scan(host)
         data.append(nm[host].hostname())
         for proto in nm[host].all_protocols():
-            data.append("------------------------------")
             data.append("Protocolo:" + str(proto.upper()) + "\n")
             lport = nm[host][proto].keys()
+
+            filtered = []
+            open = []
             for port in lport:
-                data.append("     Porta " + str(port) + " Estado " + str(nm[host][proto][port]["state"]))
-            data.append("\n------------------------------------------------------------")
+                status = str(nm[host][proto][port]["state"])
+                if status == "filtered":
+                    filtered.append(str(port))
+                elif status == "open":
+                    open.append(str(port))
+                else:
+                    data.append("     Porta " + str(port) + " Estado " + status)
+
+        data.append("     Portas em estado FILTERED:") 
+        data.append('          ' + ', '.join(filtered))
+
+        data.append("     Portas em estado OPEN:") 
+        data.append('          ' + ', '.join(open))
+
+        data.append("------------------------------------------------------------")
     return data
