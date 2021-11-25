@@ -8,8 +8,8 @@ import socket
 import psutil
 import pickle
 
-from tp5 import tp5Data
-from tp6 import *
+from tp6 import tp6Data
+from tp7 import tp7Data
 
 # Cria o socket
 socket_servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,12 +35,12 @@ while True:
     # Gera a lista de resposta
     resposta = []
 
-    #Carrega dados do TP5 a lista de resposta do servidor
-    for i in tp5Data():
-        resposta.append(i)
-
     #Carrega dados do TP6 a lista de resposta do servidor
     for i in tp6Data():
+        resposta.append(i)
+    
+    #Carrega dados do TP7 a lista de resposta do servidor
+    for i in tp7Data():
         resposta.append(i)
 
 

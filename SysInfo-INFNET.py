@@ -216,6 +216,23 @@ def pidFinder(nome):
     print("     (CHAMADA) ", time.ctime(), nome)
 # pidFinder()
 
+#Escalonamento de chamadas com sched
+scheduler = sched.scheduler(time.time, time.sleep)
+
+def print_event(nome):
+    print("EVENTO:", time.ctime(), nome)
+
+scheduler.enter(3, 1, dirFinder, ("- INFO: Função de  diretórios",))
+scheduler.enter(6, 1, pidFinder, ("- INFO: Função de  PID's\n",))
+print("------------------------------")
+print("INÍCIO DE ESCALONAMENTO DE CHAMADAS:", time.ctime(),"\n")
+
+t0 = time.perf_counter()
+freq_cpu1 = str(round(psutil.cpu_freq().current, 2))
+scheduler.run()
+sec = round(time.perf_counter() - t0)
+print("Tempo de processo do Scheduler antes de iniciar a aplicação = "+str(sec)+" segundos.") 
+print("Ciclos do processador (Frequência ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n")
 print("* * * * * INFO: Aplicação inicializada. * * * * *\n")
 
 abas = [

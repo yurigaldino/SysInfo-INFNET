@@ -2,6 +2,8 @@ import socket
 import time
 import pickle
 
+from PySimpleGUI.PySimpleGUI import Print
+
 # Função que imprime a lista formatada
 
 
@@ -22,7 +24,9 @@ try:
 
     # Envia mensagem vazia apenas para indicar a requisição
     s.send(msg.encode('ascii'))
-    bytes = s.recv(1024)
+    #bytes = s.recv(1024)
+    bytes = s.recv(4096)
+
     # Converte os bytes para lista
     lista = pickle.loads(bytes)
     
@@ -38,5 +42,5 @@ except Exception as erro:
 
 # Fecha o socket
 s.close()
-
+print("\nOs dados acima foram recebidos do servidor.")
 input("Pressione qualquer tecla para iniciar a aplicação...\n")
