@@ -1,8 +1,4 @@
-import PySimpleGUI as pysg
-from PySimpleGUI.PySimpleGUI import Print
-import psutil, platform, cpuinfo, os, time, sched, netifaces, socket , pickle
-from tabulate import tabulate
-from hurry.filesize import size, alternative
+import psutil
 
 #Dados de rede
 interfaces = psutil.net_if_addrs()

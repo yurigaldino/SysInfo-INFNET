@@ -1,11 +1,10 @@
 """ Servidor recebe conexão do cliente e obtém os dados;
 - Servidor envia os dados ao cliente e continua esperando por mais requisições
-- O processo servidor termina quando o servidor recebe a mensagem 'fim'.
+- O processo servidor termina quando o servidor recebe a mensagem 'end'.
 """
 
 # Servidor
 import socket
-import psutil
 import pickle
 
 from utils.tp5 import dataCallsSched, dataDirLayout, dataPidLayout
@@ -13,7 +12,6 @@ from utils.tp6 import tp6Data
 from utils.tp7 import tp7Data
 from utils.geral import dataGeral
 from utils.rede1 import dataRede1
-
 
 # Cria o socket
 socket_servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,7 +31,7 @@ while True:
     # Recebe pedido do cliente:
     msg = socket_cliente.recv(10240)
     print(msg)
-    if msg.decode('ascii') == 'fim':
+    if msg.decode('ascii') == 'end':
         break
 
     # Gera a lista de resposta

@@ -2,10 +2,7 @@
 #Provavelmente será necessária a adaptação dessas variáveis para funcionamento correto em outras máquinas e sistemas.
 
 import PySimpleGUI as pysg
-from PySimpleGUI.PySimpleGUI import Print
-import psutil, platform, cpuinfo, os, time, sched, netifaces, socket , pickle
-from tabulate import tabulate
-from hurry.filesize import size, alternative
+import psutil, platform
 
 #Chama o cliente com os dados vindos do servidor
 from utils.ClienteService import ClientData
@@ -121,11 +118,12 @@ def serverDataFinder():
     for i in tabela[0]:
         layout_rede2.append([pysg.Text(i, text_color=font_color)])
     # Sched
-    layout_sched.append([pysg.Text('Utilização do módulo Scheduler para escalonamento com medição de tempo e comparação da quantidade total de clocks utilizados pela CPU:')])
+    layout_sched.append([pysg.Text('Utilização do módulo Scheduler para escalonamento com medição de tempo e comparação da quantidade total de')])
+    layout_sched.append([pysg.Text('clocks utilizados pela CPU:')])
     for i in tabela[1]:
         layout_sched.append([pysg.Text(i, text_color=font_color)])
     # Diretórios
-    layout_diretorios.append([pysg.Text('Mapeamento de diretórios na raiz do Python:')])
+    layout_diretorios.append([pysg.Text('Mapeamento de diretórios na raiz do Projeto:')])
     for i in tabela[2]:
         layout_diretorios.append([pysg.Text(i, text_color=font_color)])
     # Processos

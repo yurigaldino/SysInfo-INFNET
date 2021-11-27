@@ -1,5 +1,4 @@
 import socket
-import time
 import pickle
 
 # Função que imprime a lista formatada
@@ -16,7 +15,7 @@ def ClientData():
     try:
         # Tenta se conectar ao servidor
         s.connect((socket.gethostname(), 9999))
-        msg = 'Info'
+        msg = 'Coletando dados...'
 
         # Envia mensagem vazia apenas para indicar a requisição
         s.send(msg.encode('ascii'))
@@ -25,7 +24,7 @@ def ClientData():
         # Converte os bytes para lista
         lista = pickle.loads(bytes)
 
-        msg = 'fim'
+        msg = 'end'
         s.send(msg.encode('ascii'))
     except Exception as erro:
         print(str(erro))

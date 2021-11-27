@@ -1,4 +1,3 @@
-import PySimpleGUI as pysg
 import psutil, platform, cpuinfo
 
 

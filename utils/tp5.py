@@ -1,4 +1,3 @@
-import PySimpleGUI as pysg
 import psutil, os, time, sched
 from tabulate import tabulate
 from hurry.filesize import size, alternative
