@@ -25,7 +25,6 @@ def dirFinder(nome):
             dic[dirName].append(os.stat(i).st_mtime)
 
     tabela = [["Nome", "Tamanho", "Data criação", "Data modificação"]]
-    layout_diretorios.append([pysg.Text('Mapeamento de diretórios na raiz do Python:')])
     for arq in dic:
         linha = [arq]
         linha.append(dic[arq][0])
@@ -33,8 +32,8 @@ def dirFinder(nome):
         linha.append(time.ctime(dic[arq][2]))
         tabela.append(linha)
         linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")
-    layout_diretorios.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
-    callsSched.append([pysg.Text("     (CHAMADA) " + str(time.ctime()) + str(nome), text_color=font_color)])
+    layout_diretorios.append(f'{linhaRes}')
+    callsSched.append("     (CHAMADA) " + str(time.ctime()) + str(nome))
 
 def mostra_info(pid):
     try:
@@ -63,7 +62,6 @@ def pidFinder(nome):
     tabela = []
     lista_pids = psutil.pids()
     cont = 0
-    layout_processos.append([pysg.Text("PID    #    Threads   #   Criação    #    T. Usu    #    T. Sis    #    Mem. (%)    #    RSS    #    VMS    #    Executável:")])
     for pid in lista_pids:
         texto = mostra_info(pid)
         if (texto != None):
@@ -72,9 +70,8 @@ def pidFinder(nome):
                 break
         cont += 1
     linhaRes = tabulate(tabela, headers='firstrow', tablefmt="tsv")    
-    layout_processos.append([pysg.Text(f'{linhaRes}', text_color=font_color)])
-    callsSched.append([pysg.Text("     (CHAMADA) " + str(time.ctime()) + str(nome), text_color=font_color)])
-
+    layout_processos.append(f'{linhaRes}')
+    callsSched.append("     (CHAMADA) " + str(time.ctime()) + str(nome))
 def dataCallsSched():
 
     #Escalonamento de chamadas com sched
@@ -82,15 +79,14 @@ def dataCallsSched():
 
     scheduler.enter(3, 1, dirFinder, (" - INFO: Função de  diretórios",))
     scheduler.enter(6, 1, pidFinder, (" - INFO: Função de  PID's\n",))
-    callsSched.append([pysg.Text('Utilização do módulo Scheduler para escalonamento com medição de tempo e comparação da quantidade total de clocks utilizados pela CPU:')])
-    callsSched.append([pysg.Text("\nINÍCIO DE ESCALONAMENTO DE CHAMADAS: " + str(time.ctime()) + "\n", text_color=font_color)])
+    callsSched.append("\nINÍCIO DE ESCALONAMENTO DE CHAMADAS: " + str(time.ctime()) + "\n")
 
     t0 = time.perf_counter()
     freq_cpu1 = str(round(psutil.cpu_freq().current, 2))
     scheduler.run()
     sec = round(time.perf_counter() - t0)
-    callsSched.append([pysg.Text("Tempo de processo do Scheduler antes de iniciar a aplicação = "+str(sec)+" segundos.", text_color=font_color)])
-    callsSched.append([pysg.Text("Ciclos do processador (Frequência ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n", text_color=font_color)])
+    callsSched.append("Tempo de processo do Scheduler antes de iniciar a aplicação = "+str(sec)+" segundos.")
+    callsSched.append("Ciclos do processador (Frequência ou Clock) utilizados = " + freq_cpu1 + " milhões de hertz por segundo.\n")
 
     return callsSched
 
