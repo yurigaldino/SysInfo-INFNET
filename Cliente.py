@@ -2,7 +2,7 @@
 #Provavelmente será necessária a adaptação dessas variáveis para funcionamento correto em outras máquinas e sistemas.
 
 import PySimpleGUI as pysg
-import psutil, platform
+import psutil
 
 #Chama o cliente com os dados vindos do servidor
 from utils.ClienteService import ClientData
@@ -11,107 +11,29 @@ from utils.ClienteService import ClientData
 pysg.theme('LightBrown13') #Banco de temas pode ser encontrado aqui: https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg
 font_color = 'Black'
 
-#Dados de sistema
-marca = str(platform.processor())
-
-#Dados de processador
-cores_cpu = psutil.cpu_count(logical=False)
-logical_cpu = psutil.cpu_count()
-
 #Dados de memória
 mem = psutil.virtual_memory()
-mem_total = round(mem.total / pow(2, 30), 2)
 porcent_memoria = mem.percent
-texto_memoria = str(mem_total) + "GB / " + str(porcent_memoria) + "%"
+#texto_memoria = str(mem_total) + "GB / " + str(porcent_memoria) + "%"
 
 #Dados de disco
 disco = psutil.disk_usage(".")
-disco_total = round(disco.total / pow(2, 30), 2)
 percent_disco = disco.percent
-texto_uso_disco = "(Total: " + str(disco_total) + "GB / " + str(percent_disco) + "%)"
+# texto_uso_disco = "(Total: " + str(disco_total) + "GB / " + str(percent_disco) + "%)"
 
 #Layout de abas
-layout_geral = []
-
-layout_cpu = [
-    [pysg.Text('Marca do processador:')],
-    [pysg.Text(f'{marca}', text_color=font_color)],
-    [pysg.Text('Núcleos físicos:')],
-    [pysg.Text(f'{cores_cpu} cores', text_color=font_color)],
-    [pysg.Text('Núcleos lógicos:')],
-    [pysg.Text(f'{logical_cpu} threads', text_color=font_color)],
-    [pysg.Text('Frequência total:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-FREQCPU-')],
-    [pysg.Text('Uso de CPU (Total):')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-USOCPU-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,20), key='-PROGCPU-')],
-]
-
-layout_threads = [
-    #[pysg.Text('CPU0:')],
-    [pysg.Text('CPU0', text_color=font_color, size=(10,0),key='-CPU0-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU0-')],
-    #[pysg.Text('CPU1:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU1-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU1-')],
-    #[pysg.Text('CPU2:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU2-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU2-')],
-    #[pysg.Text('CPU3:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU3-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU3-')],
-    #[pysg.Text('CPU4:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU4-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU4-')],
-    #[pysg.Text('CPU5:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU5-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU5-')],
-    #[pysg.Text('CPU6:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU6-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU6-')],
-    #[pysg.Text('CPU7:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU7-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU7-')],
-    #[pysg.Text('CPU8:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU8-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU8-')],
-    #[pysg.Text('CPU9:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU9-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU9-')],
-    #[pysg.Text('CPU10:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU10-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU10-')],
-    #[pysg.Text('CPU11:')],
-    [pysg.Text('', text_color=font_color, size=(10,0),key='-CPU11-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU11-')],  
-]
-
-layout_memoria = [
-    [pysg.Text('Memória RAM Total:')],
-    [pysg.Text(f'{mem_total}GB', text_color=font_color, size=(20,0), )],
-    [pysg.Text('Utilizada:')],
-    [pysg.Text('', text_color=font_color, size=(20,0), key='-MEMORIA-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,20), key='-PROGMEM-')]
-]
-
-layout_disco = [
-    [pysg.Text('Capacidade Total: ')],
-    [pysg.Text(f'{disco_total}GB', text_color=font_color)],
-    [pysg.Text('Utilizado:')],
-    [pysg.Text('', text_color=font_color, size=(20,0), key='-DISCO-')],
-    [pysg.ProgressBar(100, orientation='h', size=(30,20), key='-PROGDISC-')]
-]
-
+layout_geral = [] #Vem do servidor
+layout_cpu = [] #Vem do servidor (com excessão do dado atualizado em tempo real)
+layout_threads = [] # Vem do local pois são atualizados em tempo real
+layout_memoria = [] #Vem do servidor (com excessão do dado atualizado em tempo real)
+layout_disco = [] #Vem do servidor (com excessão do dado atualizado em tempo real)
 layout_rede1 = [] #Vem do servidor
-
 layout_rede2 = [] #Vem do servidor
-
 layout_diretorios = [] #Vem do servidor
-
 layout_processos = [] #Vem do Servidor
-
 layout_sched = [] #Vem do servidor
 
+#Aquisição de dados do servidor
 def serverDataFinder():
     tabela = ClientData()
     # Rede 2
@@ -148,11 +70,72 @@ def serverDataFinder():
     layout_rede1.append([pysg.Text(tabela[5][1], text_color=font_color)])
     layout_rede1.append([pysg.Text('Endereço físico:')])
     layout_rede1.append([pysg.Text(tabela[5][2], text_color=font_color)])
-
+    # Disco
+    layout_disco.append([pysg.Text('Capacidade total do disco onde este projeto está localizado: ')])      
+    layout_disco.append([pysg.Text(tabela[6][0], text_color=font_color)])
+    layout_disco.append([pysg.Text('Utilizado:')])
+    layout_disco.append([pysg.Text('', text_color=font_color, size=(20,0), key='-DISCO-')]) #Vem do local (tempo real)
+    layout_disco.append([pysg.ProgressBar(100, orientation='h', size=(30,20), key='-PROGDISC-')]) #Vem do local (tempo real)
+    # Memória
+    layout_memoria.append([pysg.Text('Memória RAM Total:')])
+    layout_memoria.append([pysg.Text(tabela[7][0], text_color=font_color, size=(20,0), )])
+    layout_memoria.append([pysg.Text('Utilizada:')])
+    layout_memoria.append([pysg.Text('', text_color=font_color, size=(20,0), key='-MEMORIA-')])
+    layout_memoria.append([pysg.ProgressBar(100, orientation='h', size=(30,20), key='-PROGMEM-')])
+    # CPU
+    layout_cpu.append([pysg.Text('Marca do processador:')])
+    layout_cpu.append([pysg.Text(tabela[8][0], text_color=font_color)])
+    layout_cpu.append([pysg.Text('Núcleos físicos:')])
+    layout_cpu.append([pysg.Text(tabela[8][1], text_color=font_color)])
+    layout_cpu.append([pysg.Text('Núcleos lógicos:')])
+    layout_cpu.append([pysg.Text(tabela[8][2], text_color=font_color)])
+    layout_cpu.append([pysg.Text('Frequência total:')])
+    layout_cpu.append([pysg.Text('', text_color=font_color, size=(10,0),key='-FREQCPU-')])
+    layout_cpu.append([pysg.Text('Uso de CPU (Total):')])
+    layout_cpu.append([pysg.Text('', text_color=font_color, size=(10,0),key='-USOCPU-')])
+    layout_cpu.append([pysg.ProgressBar(100, orientation='h', size=(30,20), key='-PROGCPU-')])
+    # Threads
+    #[pysg.Text('CPU0:')],
+    layout_threads.append([pysg.Text('CPU0', text_color=font_color, size=(10,0),key='-CPU0-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU0-')])
+    #[pysg.Text('CPU1:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU1-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU1-')])
+    #[pysg.Text('CPU2:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU2-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU2-')])
+    #[pysg.Text('CPU3:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU3-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU3-')])
+    #[pysg.Text('CPU4:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU4-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU4-')])
+    #[pysg.Text('CPU5:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU5-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU5-')])
+    #[pysg.Text('CPU6:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU6-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU6-')])
+    #[pysg.Text('CPU7:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU7-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU7-')])
+    #[pysg.Text('CPU8:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU8-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU8-')])
+    #[pysg.Text('CPU9:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU9-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU9-')])
+    #[pysg.Text('CPU10:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU10-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU10-')])
+    #[pysg.Text('CPU11:')],
+    layout_threads.append([pysg.Text('', text_color=font_color, size=(10,0),key='-CPU11-')])
+    layout_threads.append([pysg.ProgressBar(100, orientation='h', size=(30,5), key='-PROGCPU11-')])
 serverDataFinder()
 
 print("* * * * * INFO: Aplicação inicializada. * * * * *\n")
 
+#Definição de abas
 abas = [
     [pysg.TabGroup([
         [
@@ -174,6 +157,7 @@ abas = [
 #Definição de Window
 window = pysg.Window('System Information', abas)
 
+#Estrutura de funcionamento da aplicação em Run
 while True:
     event, values = window.read(timeout=10)
     

@@ -34,7 +34,7 @@ def tp6Data():
     data = []
     ip_lista = get_ip_address().split(".") 
     base_ip = ".".join(ip_lista[0:3]) + "." 
-    data.append("\nTESTE DE IPs DA SUBREDE: " + str(base_ip) + "0\n")
+    data.append("TESTE DE IPs DA SUBREDE: " + str(base_ip) + "0\n")
     host_validos = verifica_hosts(base_ip)
     data.append("     HOST VÁLIDOS: " + str(host_validos))
 

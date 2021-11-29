@@ -8,7 +8,7 @@ def tp7Data():
                 # Address
                 data.append("     IP Address: " + netifaces.ifaddresses(i)[netifaces.AF_INET][0]['addr'] + 
                 "     Subnet Mask: " + netifaces.ifaddresses(i)[netifaces.AF_INET][0]['netmask'] +  
-                "     Gateway: " + netifaces.gateways()['default'][netifaces.AF_INET][0] + "\n")
+                "     Gateway: " + netifaces.gateways()['default'][netifaces.AF_INET][0])
 
             except:pass
     return data 

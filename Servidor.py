@@ -1,8 +1,3 @@
-""" Servidor recebe conexão do cliente e obtém os dados;
-- Servidor envia os dados ao cliente e continua esperando por mais requisições
-- O processo servidor termina quando o servidor recebe a mensagem 'end'.
-"""
-
 # Servidor
 import socket
 import pickle
@@ -12,6 +7,9 @@ from utils.tp6 import tp6Data
 from utils.tp7 import tp7Data
 from utils.geral import dataGeral
 from utils.rede1 import dataRede1
+from utils.disco import dataDisco
+from utils.memoria import dataMemoria
+from utils.CPU import dataCPU
 
 # Cria o socket
 socket_servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,6 +41,9 @@ while True:
     data_Pid = []
     data_Geral = []
     data_Rede1 = []
+    data_Disco = []
+    data_Memoria = []
+    data_CPU = []
 
     #tabela[0]
     #Carrega dados do TP6 e TP7 para depois apender na resposta do servidor 
@@ -76,6 +77,21 @@ while True:
     for i in dataRede1():
         data_Rede1.append(i)
 
+    #tabela[6]
+    #Carrega dados de Disco (capacidade total) para depois apender na resposta do servidor 
+    for i in dataDisco():
+        data_Disco.append(i)
+    
+    #tabela[7]
+    #Carrega dados de Memória (RAM total) para depois apender na resposta do servidor 
+    for i in dataMemoria():
+        data_Memoria.append(i)
+    
+    #tabela[8]
+    #Carrega dados de Processador (marca, cores e logical) para depois apender na resposta do servidor 
+    for i in dataCPU():
+        data_CPU.append(i)
+    
     #Apenda dados para a resposta do servidor
     resposta.append(data_TP6_TP7)
     resposta.append(data_Sched)
@@ -83,6 +99,9 @@ while True:
     resposta.append(data_Pid)
     resposta.append(data_Geral)
     resposta.append(data_Rede1)
+    resposta.append(data_Disco)
+    resposta.append(data_Memoria)
+    resposta.append(data_CPU)
 
     # Prepara a lista para o envio
     bytes_resp = pickle.dumps(resposta)
